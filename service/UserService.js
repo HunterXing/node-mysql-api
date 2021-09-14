@@ -6,40 +6,23 @@ const resolveAsync = require("../utils/resolveAsync");
 
 const getUserAllService = async () => {
 	const [err, result] = await resolveAsync(queryAll('tb_user', '',['username', 'age']));
-	return new Promise((resolve, reject) => {
-		if(err) {
-			reject(err);
-		} else {
-			resolve(result);
-		}
-	});
+	return [err, result];
 };
 
 
 const getUserByIdService = async (id) => {
 	let [err, result] = await resolveAsync(queryAll(`tb_user`,`where id = ${id}`, ['username', 'age']));
-	return new Promise((resolve, reject) => {
-		if(err) {
-			reject(err);
-		} else {
-			result = result.length ? result[0] : {};
-			resolve(result);
-		}
-	});
+	if(!err) {
+		result = result.length ? result[0] : {};
+	}
+	return [err, result];
 };
 
 const addUserService = async (user) => {
 	let [err, result] = await resolveAsync(
 		execSql(`insert into tb_user (username, age) values ("${user.username}", ${user.age})`)
 	);
-	return new Promise((resolve, reject) => {
-		if(err) {
-			reject(err);
-		} else {
-			resolve(result.affectedRows > 0);
-
-		}
-	});
+	return [err, result];
 };
 
 
